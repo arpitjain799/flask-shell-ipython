@@ -8,7 +8,7 @@ from flask_shell_ipython import shell
 @pytest.fixture
 def app():
     app = Flask(__name__)
-    app.config['TESTING'] = True
+    app.config["TESTING"] = True
     return app
 
 
@@ -17,35 +17,26 @@ def runner(app):
     return CliRunner()
 
 
-def test_shell_command(runner, app, mocker):
-    mocker.patch('IPython.start_ipython')
-
+def test_shell_command(runner, app):
     with app.app_context():
-        result = runner.invoke(shell, ["--no-banner"])
-
-    assert result.exit_code == 0
-    assert "IPython" not in result.output
-
-
-def test_shell_command_with_banner(runner, app, mocker):
-    mocker.patch('IPython.start_ipython')
-
-    with app.app_context():
-        result = runner.invoke(shell, ["--simple-prompt"])
-
+        result = runner.invoke(shell)
     assert result.exit_code == 0
     assert "IPython" in result.output
 
 
-def test_shell_command_with_custom_config(runner, app, mocker):
-    mocker.patch('IPython.start_ipython')
-
-    app.config['IPYTHON_CONFIG'] = {
-        'InteractiveShell': {'confirm_exit': False}
-    }
-
+def test_shell_command_no_banner(runner, app):
     with app.app_context():
-        result = runner.invoke(shell, ["--no-banner"])
-
+        result = runner.invoke(shell, ["--no-banner", "--no-confirm-exit"])
     assert result.exit_code == 0
-    assert "IPython" not in result.output
+    assert result.output == "\nIn [1]: "
+
+
+def test_shell_command_with_custom_config(runner, app):
+    app.config["IPYTHON_CONFIG"] = {
+        "InteractiveShell": {"confirm_exit": False},
+        "TerminalIPythonApp": {"display_banner": False}
+    }
+    with app.app_context():
+        result = runner.invoke(shell)
+    assert result.exit_code == 0
+    assert result.output == "\nIn [1]: "

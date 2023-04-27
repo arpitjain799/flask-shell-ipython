@@ -25,14 +25,15 @@ jobs:
   test:
     name: Run tests
     needs: build
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
         flask-version: ["<2.3", ">=2.3"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         exclude:
           - python-version: "3.7"
             flask-version: ">=2.3"
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -51,7 +52,11 @@ jobs:
     - name: Make it use package from wheel
       run: rm flask_shell_ipython.py
     - name: Test
+      if: ${{ matrix.os }} != "windows-latest"
       run: pytest
+    - name: Test (Windows)
+      if: ${{ matrix.os }} == "windows-latest"
+      run: pytest --collect-only -q | grep ^test_ | while read testname; do pytest -q $testname; done
   pypi-publish:
     name: Upload release to PyPI
     needs: test
