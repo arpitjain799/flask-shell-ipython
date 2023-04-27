@@ -1,5 +1,9 @@
 name: Release
 
+on:
+  push:
+  pull_request:
+
 jobs:
   build:
     name: Build wheel
