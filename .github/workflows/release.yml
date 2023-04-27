@@ -51,12 +51,13 @@ jobs:
       shell: bash
       run: pip install *.whl
     - name: Make it use package from wheel
+      shell: bash
       run: rm flask_shell_ipython.py
     - name: Test
-      if: runner.os != "Windows"
+      if: runner.os != 'Windows'
       run: pytest --forked
     - name: Test (Windows)
-      if: runner.os == "Windows"
+      if: runner.os == 'Windows'
       shell: bash
       run: pytest --collect-only -q | grep ^test_ | while read testname; do pytest -q $testname; done
   pypi-publish:
