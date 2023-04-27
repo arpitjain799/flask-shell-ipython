@@ -44,7 +44,7 @@ jobs:
       with:
         name: wheel
     - name: Install wheel
-      run: pip install dist/*.whl
+      run: pip install *.whl
     - name: Make it use package from wheel
       run: rm flask_shell_ipython.py
     - name: Test
@@ -62,5 +62,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: wheel
+          path: dist/
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
