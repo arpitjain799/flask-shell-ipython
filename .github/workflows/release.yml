@@ -57,6 +57,7 @@ jobs:
       run: pytest --forked
     - name: Test (Windows)
       if: runner.os == "Windows"
+      shell: bash
       run: pytest --collect-only -q | grep ^test_ | while read testname; do pytest -q $testname; done
   pypi-publish:
     name: Upload release to PyPI
