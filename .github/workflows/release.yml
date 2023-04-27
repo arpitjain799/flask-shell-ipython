@@ -38,7 +38,7 @@ jobs:
     - name: Install test requirements
       run: pip install -r requirements-test.txt
     - name: Install flask
-      run: pip install "flask${{ matrix.flask-version }}"
+      run: pip install "Flask${{ matrix.flask-version }}"
     - name: Download artifacts
       uses: actions/download-artifact@v3
       with:

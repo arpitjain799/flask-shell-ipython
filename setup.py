@@ -10,7 +10,7 @@ setup(
     version="0.4.1",
     py_modules=['flask_shell_ipython'],
     install_requires=[
-        'flask>=1.0',
+        'Flask>=1.0',
         'click',
         'IPython>=5.0.0',
     ],
